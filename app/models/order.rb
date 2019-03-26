@@ -1,9 +1,11 @@
 class Order < ApplicationRecord
-    has_and_belongs_to_many :batches
+    belongs_to :batch
+
+    # -----------------------------------------------------------------
 
     # Status Scope
-    # Status: Ready, Production, Closing, Sent, Received
-    scope :active, -> { where.not(status: "received") }
+    # Status: Ready, Production, Closing, Sent
+    scope :active, -> { where.not(status: "sent") }
 
     scope :ready,       -> {where(status: "ready")}
     scope :production,  -> {where(status: "production")}
@@ -19,13 +21,26 @@ class Order < ApplicationRecord
 
     scope :total,       -> {sum(:value)}
 
-    # Validate's Presence of everything
+    # Validate's Presence of everything -------------------------------
     EXCLUDED = ["id", "created_at", "updated_at"]
     VALID = Order.attribute_names.reject{|attr| EXCLUDED.include?(attr)}
 
     validates_presence_of VALID
 
-    def send
-        self.update_attribute(status: "sent")
+    # -----------------------------------------------------------------
+
+    def create
     end
+
+    def nextState
+        case
+        when self.status == "ready"
+            self.update_attribute(status: "production")
+        when self.status == "production"
+            self.update_attribute(status: "closing")
+        when self.status == "closing"
+            self.update_attribute(status: "sent")
+        end
+    end
+
 end

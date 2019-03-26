@@ -6,7 +6,7 @@ class CreateOrders < ActiveRecord::Migration[5.2]
       t.string  :client_name
       t.string  :address
       t.string  :delivery_srvc
-      t.decimal :value, scale: 2
+      t.decimal :value, precision: 7 ,scale: 2
       t.string  :line_items
       t.string  :status
 
