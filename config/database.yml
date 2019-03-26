@@ -1,0 +1,19 @@
+# Database SetUp
+default: &default
+  adapter: postgresql
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  username: dev
+  password: 1234
+  timeout: 5000
+
+development:
+  <<: *default
+  database: dev_challenge
+
+test:
+  <<: *default
+  database: test_challenge
+
+production:
+  <<: *default
+  database: prod_challenge
