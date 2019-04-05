@@ -1,14 +1,18 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '2.6.0'
+ruby '2.3.3' # Windows WorkStation without RVM
+#ruby '2.6.0' # Main WorkStation
 gem 'rails', '~> 5.2.2', '>= 5.2.2.1'
 gem 'pg', '~> 0.21'
 gem 'puma', '~> 3.11'
 gem 'bootsnap', '>= 1.1.0', require: false
 
 group :development, :test do
+  gem 'annotate'
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+  gem 'rspec', '~>3.8.0'
+  gem 'rspec-rails', '~> 3.8.2'
 end
 
 group :development do

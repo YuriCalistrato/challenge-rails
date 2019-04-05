@@ -5,7 +5,7 @@ class Batch < ApplicationRecord
 
     # -----------------------------------------------------------------
 
-    def create(channel)
+    def create(channel ||= "default")
         #@orders = Order.active.purchaseChnl(:channel)
         @orders = Order.purchaseChnl(:channel)
         self.purchase_channel = channel
