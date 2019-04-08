@@ -14,8 +14,8 @@ class BatchesController < ApplicationController
     def close
         @batch = Batch.search(params[:ref])
         @batch.orders.map do |x|
-            if( x.delivery_srvc == params[:delivery_srvc]) do
-                if x.status == "closing" do
+            if x.delivery_srvc == params[:delivery_srvc] then
+                if git x.status == "closing" then
                     x.nextState
                 end
             end

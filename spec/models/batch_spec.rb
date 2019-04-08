@@ -1,3 +1,14 @@
+# == Schema Information
+#
+# Table name: batches
+#
+#  id               :bigint(8)        not null, primary key
+#  ref              :string
+#  purchase_channel :string
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#
+
 require 'rails_helper'
 
 describe Batch, :type => :model do

@@ -15,6 +15,11 @@ ActiveRecord::Schema.define(version: 2019_03_26_024522) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "Batches_Orders", id: false, force: :cascade do |t|
+    t.bigint "Order_id", null: false
+    t.bigint "Batch_id", null: false
+  end
+
   create_table "batches", force: :cascade do |t|
     t.string "ref"
     t.string "purchase_channel"
@@ -28,7 +33,7 @@ ActiveRecord::Schema.define(version: 2019_03_26_024522) do
     t.string "client_name"
     t.string "address"
     t.string "delivery_srvc"
-    t.decimal "value", precision: 7, scale: 2
+    t.float "value"
     t.string "line_items"
     t.string "status"
     t.datetime "created_at", null: false
