@@ -50,7 +50,7 @@ describe Batch, :type => :model do
             @order3 = create(:order,purchase_channel: "Magazine Luiza", value: "6.50")
         end
 
-        it "Create" do
+        it "create" do
             @batch = create(:batch, purchase_channel: "Magazine Luiza", ref:"BR01")
             expect(@batch.orders).to include (@order1 && @order2 && @order3)
         end
