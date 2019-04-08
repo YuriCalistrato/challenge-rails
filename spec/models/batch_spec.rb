@@ -12,11 +12,26 @@
 require 'rails_helper'
 
 describe Batch, :type => :model do
-    it "[Inits] - Instance test" do
-        batch = Batch.new
-        expect(batch).not_to be_nil
-    end
 
-    it "[Valid] - Only valid with valid fields"
-    it "[Scope] - Active can't be on status Sent"
+    context "Creation" do
+
+        before(:all) do
+            @batch =        build(:batch)
+            @savedBatch =   create(:batch)
+        end
+
+        it "valid fields" do
+            expect(@batch).to be_valid
+        end
+
+        it "invalid fields" do
+            batch = build( :batch,
+                id: 37,
+                ref: 912,
+                purchase_channel: "Lojas Americanas"
+            )
+            expect(batch).not_to be_valid
+        end
+
+    end
 end

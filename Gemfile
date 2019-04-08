@@ -12,6 +12,7 @@ group :development, :test do
   gem 'annotate'
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'rspec', '~>3.8.0'
+  gem 'factory_bot_rails', '~>5.0.1'
   gem 'rspec-rails', '~> 3.8.2'
 end
 

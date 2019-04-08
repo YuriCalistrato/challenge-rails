@@ -11,17 +11,37 @@
 
 class Batch < ApplicationRecord
     has_many :orders
+    before_validation :preSave
 
     scope :search, -> (ref){where(ref: ref) if ref.present?}
 
     # -----------------------------------------------------------------
+    EXCLUDED = ["id", "created_at", "updated_at"]
+    VALID = Batch.attribute_names.reject{|attr| EXCLUDED.include?(attr)}
 
-    def create(channel = "default")
-        #@orders = Order.active.purchaseChnl(:channel)
-        @orders = Order.purchaseChnl(:channel)
-        self.purchase_channel = channel
+    validate :check
+    validates_presence_of VALID # Purchase Channel
+    # -----------------------------------------------------------------
+
+    def preSave
+        self.ref ||= "BR-"<<(Batch.maximum(:id).to_i+1).to_s
+    end
+
+    def check
+        if self.id.present?
+            errors.add(:check, "Shouldn't have id on creation.") 
+        end
+        if self.created_at? || self.updated_at?
+            errors.add(:check, "Shouldn't have invalid fields on creation.")
+        end
+    end
+
+    def create
+        @orders = Order.active.purchaseChnl(:channel)
+        #@orders = Order.purchaseChnl(:channel)
+        p @orders
         self.orders << @orders
-        self.ref = "BR-"+Batch.maximum(:id)+1
+
         self.save ? self : nil
     end
 
