@@ -19,11 +19,34 @@
 require 'rails_helper'
 
 describe Order, :type => :model do
-    it "[Inits] - Instance test" do
-        order = Order.new
-        expect(order).not_to be_nil
+
+    context 'Creation' do
+        it "With valid fields" do
+            order = Order.new(
+                ref: "BR40812",
+                purchase_channel: "Lojas Americanas",
+                client_name: "Yudi PlayStation",
+                address: "Sampa em algum lugar",
+                delivery_srvc: "SEDEX",
+                value: "R$ 523,00",
+                line_items: "VideoGames"
+            )
+            expect(order).to be_valid
+        end
+
+        it "Without valid fields" do
+            order = Order.new({
+                id: 2,
+                ref: 4,
+                purchase_channel: 1,
+                client_name: 123,
+                address: 1235415,
+                delivery_srvc: 123,
+                value: 123,
+                line_items: "VideoGames"
+            })
+            expect(order).not_to be_valid
+        end
     end
 
-    it "[Valid] - Only valid with valid fields"
-    it "[Scope] - Active can't be on status Sent"
 end

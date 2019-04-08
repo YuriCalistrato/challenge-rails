@@ -17,7 +17,8 @@
 #
 
 class Order < ApplicationRecord
-    belongs_to :batch
+    belongs_to :batch, optional: true
+    before_validation :preSave
 
     # -----------------------------------------------------------------
 
@@ -40,14 +41,25 @@ class Order < ApplicationRecord
     scope :total,       -> {sum(:value)}
 
     # Validate's Presence of everything -------------------------------
-    EXCLUDED = ["id", "created_at", "updated_at"]
+    EXCLUDED = ["id", "batch_id", "created_at", "updated_at"]
     VALID = Order.attribute_names.reject{|attr| EXCLUDED.include?(attr)}
 
+    validate :check
     validates_presence_of VALID
 
     # -----------------------------------------------------------------
+    
+    def preSave
+        self.status ||= "ready"
+    end
 
-    def create
+    def check
+        if self.id.present?
+            errors.add(:check, "Shouldn't have id on creation.") 
+        end
+        if self.created_at? || self.updated_at?
+            errors.add(:check,"Shouldn't have creation timestamps on creation.")
+        end
     end
 
     def nextState
