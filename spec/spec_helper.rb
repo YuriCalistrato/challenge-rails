@@ -1,4 +1,5 @@
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
+require 'database_cleaner'
 
 RSpec.configure do |config|
 
@@ -10,6 +11,10 @@ RSpec.configure do |config|
   # Mock
   config.mock_with :rspec do |mocks|
     mocks.verify_partial_doubles = true
+  end
+
+  config.before(:suite) do
+    DatabaseCleaner.clean_with(:truncation)
   end
 
   # This option will default to `:apply_to_host_groups` in RSpec 4 (and will

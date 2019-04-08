@@ -19,6 +19,13 @@ require 'rails_helper'
 
 describe Order, :type => :model do
 
+    it "Tool Scoop for report" do
+        order = create(:order, value: 1)
+        order2 = create(:order,value: 2)
+        order3 = create(:order,value: 3)
+        expect(Order.total).to be > 5
+    end
+
     context 'Basic Operations' do
 
         before(:all) do
@@ -110,13 +117,6 @@ describe Order, :type => :model do
             order = create(:order, client_name: "Yuri Calistrato")
             expect(Order.clientSearch("Yuri Calistrato")).to include(order)
         end
-    end
-    
-    it "Tool Scoop for report" do
-        order = create(:order, value: 1)
-        order2 = create(:order,value: 2)
-        order3 = create(:order,value: 3)
-        expect(Order.total).to eq 6
     end
 
     it "Def for State Flow" do

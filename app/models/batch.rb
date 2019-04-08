@@ -12,8 +12,10 @@
 class Batch < ApplicationRecord
     has_many :orders
     before_validation :preSave
+    after_create :postCreate
 
-    scope :search, -> (ref){where(ref: ref) if ref.present?}
+    scope :search,          -> (ref){where(ref: ref) if ref.present?}
+    scope :purchaseChnl,    -> (cnh){where(purchase_channel: cnh) if cnh.present?}
 
     # -----------------------------------------------------------------
     EXCLUDED = ["id", "created_at", "updated_at"]
@@ -36,13 +38,10 @@ class Batch < ApplicationRecord
         end
     end
 
-    def create
-        @orders = Order.active.purchaseChnl(:channel)
-        #@orders = Order.purchaseChnl(:channel)
-        p @orders
-        self.orders << @orders
-
-        self.save ? self : nil
+    def postCreate
+        orders = Order.active.purchaseChnl(self.purchase_channel)
+        self.orders << orders
+        self.save
     end
 
 end
