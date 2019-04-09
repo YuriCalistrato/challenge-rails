@@ -21,7 +21,7 @@ class BatchesController < ApplicationController
 
     def deliver
         @batch = Batch.search(params[:ref]).first
-        changeAndSend("close",params[:delivery_srvc])
+        changeAndSend("closing",params[:delivery_srvc])
     end
 
     private
