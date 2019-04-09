@@ -1,6 +1,7 @@
 # Rails Spec
 require 'spec_helper'
 require 'support/factory_bot'
+require 'support/json_spec'
 ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path('../../config/environment', __FILE__)
 

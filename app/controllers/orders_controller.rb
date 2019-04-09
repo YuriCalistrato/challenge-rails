@@ -1,12 +1,20 @@
 class OrdersController < ApplicationController
 
     def create
-      @order = Order.create!(order_params)
-      json_response(@order, :created)
+        @order = Order.create(order_params)
+        if !@order.new_record?
+            json_response(@order, :created)
+        else
+            json_response(@order, :not_created)
+        end
     end
   
     def list
-        @order = Order.purchaseChnl(params[:purchase_channel])
+        if params[:purchase_channel].present?
+            @order = Order.purchaseChnl(params[:purchase_channel])
+        else
+            @order = Order.purchaseChnl("default")
+        end
         json_response(@order)
     end
   
@@ -26,7 +34,7 @@ class OrdersController < ApplicationController
     # --------------------
 
     def order_params
-      params.require(:order).permit(Order.column_names - ["created_at", "updated_at"])
+        params.require(:order).permit(Order.column_names - ["id", "created_at", "updated_at"])
     end
     
   end

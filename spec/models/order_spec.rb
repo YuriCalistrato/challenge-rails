@@ -16,19 +16,13 @@
 #  batch_id         :bigint(8)
 #
 require 'rails_helper'
+require 'database_cleaner'
 
 describe Order, :type => :model do
 
-    it "Tool Scoop for report" do
-        order = create(:order, value: 1)
-        order2 = create(:order,value: 2)
-        order3 = create(:order,value: 3)
-        expect(Order.total).to be > 5
-    end
-
     context 'Basic Operations' do
 
-        before(:all) do
+        before(:each) do
             @order = build(:order)
         end
 
@@ -37,7 +31,7 @@ describe Order, :type => :model do
         end
 
         it "invalid fields" do
-            order2 = build(:order, 
+            order = build(:order, 
                 id: 2,
                 ref:4,
                 purchase_channel: 1,
@@ -47,7 +41,7 @@ describe Order, :type => :model do
                 value: 123,
                 line_items: "VideoGames"
             )
-            expect(order2).not_to be_valid
+            expect(order).not_to be_valid
         end
 
         it "persist" do
@@ -55,24 +49,26 @@ describe Order, :type => :model do
         end
 
         it "query" do
-            order = create(:order)
+            @order.save
             expect(Order.first).not_to be nil
         end
     end
 
     context "State Scopes" do
+        DatabaseCleaner.clean_with(:truncation)
 
-        before(:all) do
-            @order = create(:order)
+        before(:each) do
+            # Build a Ready Order
+            @order = build(:order)
         end
 
         it "active" do
-            # Before(:all) has instanced one Active.
+            @order.save
             expect(Order.active).not_to be nil
         end
 
         it "ready" do
-            order = create(:order, status: "ready")
+            # If previous test passes, this should pass too
             expect(Order.ready).not_to be nil
         end
 
@@ -92,10 +88,13 @@ describe Order, :type => :model do
         end
 
     end
+
     context "Conditional Scopes" do
+        DatabaseCleaner.clean_with(:truncation)
+
         it "Purchase Channel Scope" do
-            order = create(:order, purchase_channel:"Amazon")
-            expect(Order.purchaseChnl("Amazon")).to include(order)
+            order = create(:order, purchase_channel:"Cingapura Inc")
+            expect(Order.purchaseChnl("Cingapura Inc")).to include(order)
         end
 
         it "Delivery Service Scope" do
@@ -120,9 +119,18 @@ describe Order, :type => :model do
     end
 
     it "Def for State Flow" do
+        DatabaseCleaner.clean_with(:truncation)
         order = create(:order, status: "ready")
         order.nextState
         expect(Order.production).to include(order)
+    end
+
+    it "Tool Scoop for report" do
+        DatabaseCleaner.clean_with(:truncation)
+        order = create(:order, value: 1)
+        order2 = create(:order,value: 2)
+        order3 = create(:order,value: 3)
+        expect(Order.total).to eq 6.0
     end
 
 end

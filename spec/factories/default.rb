@@ -10,7 +10,7 @@ FactoryBot.define do
     end
 
     factory :batch, class: Batch do
-        purchase_channel    { "Lojas Americanas" }
+        purchase_channel    { "Amazon" }
     end
 
 end

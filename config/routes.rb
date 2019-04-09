@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   post 'batch/create'                           => 'batches#create'
   post 'batch/produce'                          => 'batches#produce'
   post 'batch/close/'                           => 'batches#close'
+  post 'batch/deliver/'                            => 'batches#deliver'
 
   # Orders
   post 'orders/create'                          => 'orders#create'

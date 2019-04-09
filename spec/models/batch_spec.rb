@@ -10,14 +10,14 @@
 #
 
 require 'rails_helper'
+require 'database_cleaner'
 
 describe Batch, :type => :model do
 
     context "Basic Operations" do
 
         before(:all) do
-            @batch =        build(:batch)
-            @savedBatch =   create(:batch)
+            @batch = build(:batch)
         end
 
         it "valid fields" do
@@ -38,13 +38,16 @@ describe Batch, :type => :model do
         end
 
         it "query" do
+            create(:batch)
             expect(Batch.first).not_to be nil
         end
 
     end
 
     context "Batch with Orders" do
+
         before(:all) do
+            DatabaseCleaner.clean_with(:truncation)
             @order1 = create(:order,purchase_channel: "Magazine Luiza", value: "4.00")
             @order2 = create(:order,purchase_channel: "Magazine Luiza", value: "4.50")
             @order3 = create(:order,purchase_channel: "Magazine Luiza", value: "6.50")

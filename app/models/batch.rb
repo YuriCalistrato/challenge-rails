@@ -18,11 +18,11 @@ class Batch < ApplicationRecord
     scope :purchaseChnl,    -> (cnh){where(purchase_channel: cnh) if cnh.present?}
 
     # -----------------------------------------------------------------
-    EXCLUDED = ["id", "created_at", "updated_at"]
-    VALID = Batch.attribute_names.reject{|attr| EXCLUDED.include?(attr)}
+    #EXCLUDED = ["id", "created_at", "updated_at"]
+    #VALID = Batch.attribute_names.reject{|attr| EXCLUDED.include?(attr)}
 
     validate :check
-    validates_presence_of VALID # Purchase Channel
+    validates_presence_of :purchase_channel # Purchase Channel
     # -----------------------------------------------------------------
 
     def preSave
@@ -40,8 +40,9 @@ class Batch < ApplicationRecord
 
     def postCreate
         orders = Order.active.purchaseChnl(self.purchase_channel)
-        self.orders << orders
-        self.save
+        orders.each do |x|
+            x.update_attribute(:batch_id, self.id)
+        end
     end
 
 end
